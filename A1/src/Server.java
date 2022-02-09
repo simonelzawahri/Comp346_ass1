@@ -322,10 +322,13 @@ public class Server extends Thread {
     		Thread.yield();
     	}
     	
-    	System.out.println("DEBUG SERVER");
     	
+    	//******FIX PROCESSTRANS
     	processTransactions(transaction);
+    	System.out.println("DEBUG SERVER");
     	objNetwork.disconnect(objNetwork.getServerIP());
+    	
+   
     	
     	serverEndTime = System.currentTimeMillis();
    

@@ -145,6 +145,7 @@ public class Client extends Thread {
 
      }
      
+     
     /** 
      * Sending the transactions to the server 
      * 

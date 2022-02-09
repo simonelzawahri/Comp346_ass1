@@ -560,9 +560,14 @@ public class Network extends Thread {
     	
     	boolean connected = !getServerConnectionStatus().equals("disconnected") && !getClientConnectionStatus().equals("disconnected");
     	
+    	System.out.println("DEBUG NETWORK");
+    	
+    	//**********FIX
     	while(connected) {
     		Thread.yield();
     	}
+    	
+    	
     	
     	networkEndTime = System.currentTimeMillis();
     	System.out.println("\n Terminating network thread - " + " Running time " + (networkEndTime - networkStartTime) + " milliseconds");
