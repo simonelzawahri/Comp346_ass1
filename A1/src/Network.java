@@ -552,25 +552,30 @@ public class Network extends Thread {
      */
     public void run()
     {
-    	long networkStartTime, networkEndTime;
-    	
     	System.out.println("\n DEBUG : Network.run() - starting network thread");
     	
-    	networkStartTime = System.currentTimeMillis();
-    	
-    	boolean connected = !getServerConnectionStatus().equals("disconnected") && !getClientConnectionStatus().equals("disconnected");
-    	
-    	System.out.println("DEBUG NETWORK");
-    	
-    	//**********FIX
-    	while(connected) {
-    		Thread.yield();
+    	boolean disconnected;	//bool to check status of server and client connection
+
+    	/* ***ISSUE RESOLVED***
+    	 * Network continually checks if server and client are disconnected or connected. If disconnected, terminate. Else, yield. 
+    	 */
+    	while(true) {
+        	disconnected = getServerConnectionStatus().equals("disconnected") && getClientConnectionStatus().equals("disconnected");
+
+    		if(disconnected) {
+    			System.out.println("\n Terminating network thread");
+    			
+    			setNetworkStatus("inactive");
+    			
+    			System.exit(0);
+    		} else {
+    			Thread.yield();
+    		}
     	}
     	
     	
+
     	
-    	networkEndTime = System.currentTimeMillis();
-    	System.out.println("\n Terminating network thread - " + " Running time " + (networkEndTime - networkStartTime) + " milliseconds");
     }
 }
 

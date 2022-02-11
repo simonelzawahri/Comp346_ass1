@@ -192,7 +192,11 @@ public class Server extends Thread {
          /* Process the accounts until the client disconnects */
          while ((!objNetwork.getClientConnectionStatus().equals("disconnected")))
          { 
-        	 while( (objNetwork.getInBufferStatus().equals("empty"))) { /* Alternatively, busy-wait until the network input buffer is available */
+        	/* ***ISSUE RESOLVED***
+        	 *I added another condition to check if the Client is still connected. At any point, between the previous line and this line,
+        	 the Client can disconnect. We need the Client to be connected in order to continue. 
+        	 */
+        	 while( (objNetwork.getInBufferStatus().equals("empty") && !objNetwork.getClientConnectionStatus().equals("disconnected"))) { /* Alternatively, busy-wait until the network input buffer is available */
         		 Thread.yield();
         	 }
         	 
@@ -232,9 +236,9 @@ public class Server extends Thread {
                             
                             System.out.println("\n DEBUG : Server.processTransactions() - Obtaining balance from account" + trans.getAccountNumber());
         				 } 
-        		        		 
+        		    
         		 while( (objNetwork.getOutBufferStatus().equals("full"))) { /* Alternatively,  busy-wait until the network output buffer is available */
-        			 Thread.yield();
+        			 	Thread.yield();
         			 }
         		 
         		 System.out.println("\n DEBUG : Server.processTransactions() - transferring out account " + trans.getAccountNumber());
@@ -321,14 +325,10 @@ public class Server extends Thread {
     	while(!objNetwork.getNetworkStatus().equals("active")) {
     		Thread.yield();
     	}
-    	
-    	
-    	//******FIX PROCESSTRANS
+    
     	processTransactions(transaction);
-    	System.out.println("DEBUG SERVER");
-    	objNetwork.disconnect(objNetwork.getServerIP());
     	
-   
+    	objNetwork.disconnect(objNetwork.getServerIP());
     	
     	serverEndTime = System.currentTimeMillis();
    
